@@ -1,22 +1,31 @@
-<!doctype html>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+      
+        <title>School to Google</title>
+        <meta name="description" content="School to Google">
+        <meta name="author" content="Clarence Chan">
+      
+        <link rel="stylesheet" href="./style.css">
+      
+      </head>
+  <body>
+    <p>Google Calendar API Quickstart</p>
 
-<html lang="en">
+    <!--Add buttons to initiate auth sequence and sign out-->
+    <button id="authorize_button" style="display: none;">Authorize</button>
+    <button id="signout_button" style="display: none;">Sign Out</button>
+    <button id="parse_button">Parse</button>
+    <textarea name="" id="" cols="30" rows="10"></textarea>
 
-<head>
-  <meta charset="utf-8">
+    <pre id="content"></pre>
 
-  <title>School to Google</title>
-  <meta name="description" content="School to Google">
-  <meta name="author" content="Clarence Chan">
-
-  <link rel="stylesheet" href="style.css">
-
-</head>
-
-<body>
-  <button onclick="calendar()">Go</button>
-  <script src="https://apis.google.com/js/api.js"></script>
-  <script src="script.js"></script>
-</body>
-
+    <script src='./config.js'></script>
+    <script src='./script.js'></script>
+    <script async defer src="https://apis.google.com/js/api.js"
+      onload="this.onload=function(){};handleClientLoad()"
+      onreadystatechange="if (this.readyState === 'complete') this.onload()">
+    </script>
+  </body>
 </html>
