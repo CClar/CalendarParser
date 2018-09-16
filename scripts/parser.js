@@ -6,8 +6,6 @@ function handleParseClick() {
     // Currently relies on the order, though with more regex, it'll be slower but more flexible and 
     // work out of order.
 
-    console.log('parsecalled')
-
     // Get and split raw text into lines
     const calendar = document.querySelector('#calendarRaw');
     const rawLines = calendar.innerHTML.split('\n');
@@ -19,7 +17,6 @@ function handleParseClick() {
         if (word != null)
             tempArr.push([word[0], i]);
     }
-    console.log(tempArr);
 
     // Split into registered courses
     let courses = [];
@@ -31,13 +28,36 @@ function handleParseClick() {
                 courses.push(rawLines.slice(tempArr[i][1] - 2));
         }
     }
-    console.log(courses)
 
-    //TODO: Split into classes
+    //Split into classes
     let classes = [];
 
-
+    courses.forEach((ele, i)=>{
+        classes.push({
+            name: ele[0].slice(0,7),
+            dates: classDate(ele)
+        });
+    });
+    console.log(classes)
     
     //TODO: Send to google calendar
 }
 
+function classDate(ele){
+    // returns an array with the time information of the classes
+    let classTimes = [];
+
+    ele.forEach((e, i)=>{
+        if (/^[A-Z][a-z] [0-9][0-9:]/.test(e)){
+            classTimes.push({
+                day: e.slice(0,2),
+                time: e.slice(3),
+                location: ele[i+1].slice(),
+                startDate: ele[i+3].slice(0, 10),
+                endDate: ele[i+3].slice(13)
+            })
+        }
+    });
+
+    return classTimes;
+}
