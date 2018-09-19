@@ -7,7 +7,7 @@ var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/
 
 // Authorization scopes required by the API; multiple scopes can be
 // included, separated by spaces.
-var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
+var SCOPES = "https://www.googleapis.com/auth/calendar";
 
 var authorizeButton = document.getElementById('authorize_button');
 var signoutButton = document.getElementById('signout_button');
@@ -48,7 +48,8 @@ function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
     authorizeButton.style.display = 'none';
     signoutButton.style.display = 'block';
-    listUpcomingEvents();
+    // Test
+    // test();
   } else {
     authorizeButton.style.display = 'block';
     signoutButton.style.display = 'none';
@@ -80,35 +81,55 @@ function appendPre(message) {
   var textContent = document.createTextNode(message + '\n');
   pre.appendChild(textContent);
 }
-
-/**
- * Print the summary and start datetime/date of the next ten events in
- * the authorized user's calendar. If no events are found an
- * appropriate message is printed.
- */
-function listUpcomingEvents() {
-  gapi.client.calendar.events.list({
-    'calendarId': 'primary',
-    'timeMin': (new Date()).toISOString(),
-    'showDeleted': false,
-    'singleEvents': true,
-    'maxResults': 10,
-    'orderBy': 'startTime'
-  }).then(function(response) {
-    var events = response.result.items;
-    appendPre('Upcoming events:');
-
-    if (events.length > 0) {
-      for (i = 0; i < events.length; i++) {
-        var event = events[i];
-        var when = event.start.dateTime;
-        if (!when) {
-          when = event.start.date;
+function handleCalendarUpdate(classes) {
+  // loop for array of classes
+  classes.forEach(element => {
+    // loop for array of dates
+    element.dates.forEach(classInfo => {
+      // take the course name, room, end date, start date
+      let event = {
+        "summary": "name",
+        "location": "location",
+        "recurrence": [
+          "RRULE:FREQ=WEEKLY;UNTIL=20181010"
+        ],
+        "start": {
+          "dateTime": "2018-09-18T09:00:00-07:00",
+          "timeZone": "America/Toronto"
+        },
+        "end": {
+          "dateTime": "2018-09-17T17:00:00-07:00",
+          "timeZone": "America/Toronto"
         }
-        appendPre(event.summary + ' (' + when + ')')
       }
-    } else {
-      appendPre('No upcoming events found.');
+    });
+    console.log
+  });
+
+}
+function test() {
+  var event = {
+    "summary": "eventTitle",
+    "location": "locationString",
+    "recurrence": [
+      "RRULE:FREQ=WEEKLY;UNTIL=20181010"
+    ],
+    "start": {
+      "dateTime": "2018-09-18T09:00:00-07:00",
+      "timeZone": "America/Toronto"
+    },
+    "end": {
+      "dateTime": "2018-09-17T17:00:00-07:00",
+      "timeZone": "America/Toronto"
     }
+  };
+
+  var request = gapi.client.calendar.events.insert({
+    "calendarId": "primary",
+    "resource": event
+  });
+
+  request.execute(function (event) {
+    appendPre('Event created: ' + event.htmlLink);
   });
 }
