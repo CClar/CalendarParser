@@ -105,6 +105,7 @@ function calEndDay(ele, i) {
 function displayParse(classEvents) {
     // Display data for each class before parsing and sending to google api
     let calendarContainer = document.querySelector("#calendarContainer");
+    calendarContainer.innerHTML = "This will not care about existing events and will duplicate events. <br><br>";
     classEvents.forEach((ele) => {
         ele.dates.forEach((e) => {
             calendarContainer.innerHTML +=
@@ -115,6 +116,6 @@ function displayParse(classEvents) {
     });
     let submitButton = document.createElement("button");
     submitButton.onclick = () => { handleCalendarUpdate(classEvents) };
-    submitButton.textContent = "Submit to Google Calendar"
+    submitButton.textContent = "Submit to Google Calendar";
     calendarContainer.appendChild(submitButton);
 }
