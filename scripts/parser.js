@@ -38,7 +38,7 @@ function handleParseClick() {
             dates: classDate(ele)
         });
     });
-    handleCalendarUpdate(classes);
+    displayParse(classes);
 }
 
 function classDate(ele) {
@@ -52,7 +52,9 @@ function classDate(ele) {
                 time: calTime(e.slice(3)),
                 location: ele[i + 1].slice(),
                 startDate: calStartDay(e.slice(0, 2), ele[i + 3].slice(0, 10)),
-                endDate: calEndDay(ele, i)
+                endDate: calEndDay(ele, i),
+                unPTime: e.slice(3),
+                unPStart: ele[i + 3].slice(0, 10)
             })
         }
     });
@@ -77,8 +79,6 @@ function calStartDay(day, start) {
 }
 function calTime(time) {
     // API dateTime Format
-    // 2018-09-18T09:00:00
-    let startTime, endTime;
     time = time.match(/\d?\d:\d?\d[AP]M/g);
 
     time = time.map((ele) => {
@@ -87,6 +87,7 @@ function calTime(time) {
     return time;
 }
 function AMPM(time) {
+    // returns the time parsed into 24h format
     let twentyfourTime;
 
     if (time.slice(-2) == "PM") {
@@ -100,4 +101,20 @@ function AMPM(time) {
 }
 function calEndDay(ele, i) {
     return ele[i + 3].slice(19) + ele[i + 3].slice(13, 15) + ele[i + 3].slice(16, 18);
+}
+function displayParse(classEvents) {
+    // Display data for each class before parsing and sending to google api
+    let calendarContainer = document.querySelector("#calendarContainer");
+    classEvents.forEach((ele) => {
+        ele.dates.forEach((e) => {
+            calendarContainer.innerHTML +=
+                ele.name + ", " + e.day + ", " + e.unPStart + ", " + e.unPTime +
+                "</br>";
+        });
+        calendarContainer.innerHTML += "</br>";
+    });
+    let submitButton = document.createElement("button");
+    submitButton.onclick = () => { handleCalendarUpdate(classEvents) };
+    submitButton.textContent = "Submit to Google Calendar"
+    calendarContainer.appendChild(submitButton);
 }

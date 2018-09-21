@@ -82,55 +82,55 @@ function appendPre(message) {
   pre.appendChild(textContent);
 }
 function handleCalendarUpdate(classes) {
-  console.log(classes);
+  let classEvents = [];
   // loop for array of classes
   classes.forEach(element => {
     // loop for array of dates
     element.dates.forEach(classInfo => {
       // take the course name, room, end date, start date
       let event = {
-        "summary": "name",
-        "location": "location",
+        "summary": element.name,
+        "location": classInfo.location,
         "recurrence": [
-          "RRULE:FREQ=WEEKLY;UNTIL=20181010"
+          "RRULE:FREQ=WEEKLY;UNTIL=" + classInfo.endDate
         ],
         "start": {
-          "dateTime": "2018-09-18T09:00:00-07:00",
+          "dateTime": classInfo.startDate + classInfo.time[0],
           "timeZone": "America/Toronto"
         },
         "end": {
-          "dateTime": "2018-09-17T17:00:00-07:00",
+          "dateTime": classInfo.startDate + classInfo.time[1],
           "timeZone": "America/Toronto"
         }
       }
+      classEvents.push(event);
     });
-    console.log
   });
-
+  submitToGoogle(classEvents);
 }
-function test() {
-  var event = {
-    "summary": "eventTitle",
-    "location": "locationString",
-    "recurrence": [
-      "RRULE:FREQ=WEEKLY;UNTIL=20181010"
-    ],
-    "start": {
-      "dateTime": "2018-09-18T09:00:00-07:00",
-      "timeZone": "America/Toronto"
-    },
-    "end": {
-      "dateTime": "2018-09-17T17:00:00-07:00",
-      "timeZone": "America/Toronto"
+function submitToGoogle(classEvents) {
+  let events = [];
+  // Formats object into object for google api
+  classEvents.forEach(element => {
+    let event = {
+      "summary": element.summary,
+      "location": element.location,
+      "recurrence": element.recurrence,
+      "start": element.start,
+      "end": element.end
     }
-  };
-
-  var request = gapi.client.calendar.events.insert({
-    "calendarId": "primary",
-    "resource": event
+    events.push(event);
   });
 
-  request.execute(function (event) {
-    appendPre('Event created: ' + event.htmlLink);
-  });
+
+  // Submits each event as to google api
+  events.forEach((event) => {
+    let request = gapi.client.calendar.events.insert({
+      "calendarId": "primary",
+      "resource": event
+    });
+    request.execute(function (event) {
+      appendPre('Event ' + event.summary + ' created: ' + event.htmlLink);
+    });
+  })
 }
