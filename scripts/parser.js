@@ -38,7 +38,6 @@ function handleParseClick() {
             dates: classDate(ele)
         });
     });
-    console.log(classes);
     handleCalendarUpdate(classes);
 }
 
@@ -53,7 +52,7 @@ function classDate(ele) {
                 time: calTime(e.slice(3)),
                 location: ele[i + 1].slice(),
                 startDate: calStartDay(e.slice(0, 2), ele[i + 3].slice(0, 10)),
-                endDate: calEndDay(ele,i)
+                endDate: calEndDay(ele, i)
             })
         }
     });
@@ -73,27 +72,32 @@ function calStartDay(day, start) {
     }
     start = new Date(start);
     start.setTime(start.getTime() + (7 + dayWeekKey[day] - start.getDay()) % 7 * 86400000);
-    start = start.getFullYear() + '-' + (start.getMonth()+1) + '-' + start.getDate();
+    start = start.getFullYear() + '-' + (start.getMonth() + 1) + '-' + start.getDate();
     return start;
 }
-function calTime(time){
+function calTime(time) {
     // API dateTime Format
     // 2018-09-18T09:00:00
     let startTime, endTime;
-        // todo: regex to find AM/PM
-    if (true){
-        // todo: regex to find dd:ddPM - dd:ddPM
-    } else {
-        // todo: regex to find dd:ddPM - dd:ddPM
-    }
-        // todo: regex to find AM/PM
-    if (true){
-        // todo: regex to find dd:ddPM - dd:ddPM
-    } else {
-        // todo: regex to find dd:ddPM - dd:ddPM
-    }
+    time = time.match(/\d?\d:\d?\d[AP]M/g);
+
+    time = time.map((ele) => {
+        return AMPM(ele);
+    });
     return time;
 }
-function calEndDay(ele, i){
+function AMPM(time) {
+    let twentyfourTime;
+
+    if (time.slice(-2) == "PM") {
+        // Add 12hours to make it 24hr format
+        twentyfourTime = (time.slice(0, 1) * 1 + 12) + time.slice(1, -2)
+    } else {
+        twentyfourTime = time.slice(0, -2)
+    }
+
+    return 'T' + twentyfourTime + ":00";
+}
+function calEndDay(ele, i) {
     return ele[i + 3].slice(19) + ele[i + 3].slice(13, 15) + ele[i + 3].slice(16, 18);
 }

@@ -82,6 +82,7 @@ function appendPre(message) {
   pre.appendChild(textContent);
 }
 function handleCalendarUpdate(classes) {
+  console.log(classes);
   // loop for array of classes
   classes.forEach(element => {
     // loop for array of dates
